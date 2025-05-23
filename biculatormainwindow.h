@@ -18,11 +18,15 @@ public:
     ~BiculatorMainWindow();
 
 private slots:
-    void onAnyButtonToggled(bool checked);
+    void onBinButtonToggled(bool checked);
+    void onClearButtonClicked();
 
 private:
     Ui::BiculatorMainWindow *ui;
     uint64_t oprand1;
     uint64_t oprand2;
+
+    void updateTextToButton();
+    void updateButtonToText();
 };
 #endif // BICULATORMAINWINDOW_H
