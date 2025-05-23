@@ -7,6 +7,8 @@ BiculatorMainWindow::BiculatorMainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    setWindowTitle("Bindows Calc.exe");
+
     // setup the binary toggle buttons
     for (int i = 0; i < 64; ++i) {
         // Build the button name: "BinDigit0", "BinDigit1", ...
@@ -24,6 +26,9 @@ BiculatorMainWindow::BiculatorMainWindow(QWidget *parent)
 
     // setup the clear button
     connect(ui->ClearButton, &QPushButton::clicked, this, &BiculatorMainWindow::onClearButtonClicked);
+
+    // setup hex dispaly uppercase option check box
+    connect(ui->HexUpperOption, &QCheckBox::clicked, this, &BiculatorMainWindow::onTextDisplayOptionChanged);
 }
 
 BiculatorMainWindow::~BiculatorMainWindow()
@@ -81,12 +86,18 @@ void BiculatorMainWindow::updateButtonToText()
         uint64_t tmp = tmpBtn->text().toUInt();
         input += (tmp << i);
     }
-
-    ui->Display_Hex->setText("0x" + QString::number(input, 16));
+    if(ui->HexUpperOption->isChecked())
+        ui->Display_Hex->setText("0x" + QString::number(input, 16).toUpper());
+    else
+        ui->Display_Hex->setText("0x" + QString::number(input, 16));
     ui->Display_Dec->setText(QString::number(input, 10));
 }
 
 
+void BiculatorMainWindow::onTextDisplayOptionChanged()
+{
+    this->updateButtonToText();
+}
 
 
 

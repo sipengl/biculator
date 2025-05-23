@@ -20,6 +20,7 @@ public:
 private slots:
     void onBinButtonToggled(bool checked);
     void onClearButtonClicked();
+    void onTextDisplayOptionChanged();
 
 private:
     Ui::BiculatorMainWindow *ui;

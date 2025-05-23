@@ -855,6 +855,16 @@
       <height>41</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <family>Noto Sans Mono</family>
+      <pointsize>12</pointsize>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+    </property>
    </widget>
    <widget class="QLineEdit" name="Display_Dec">
     <property name="geometry">
@@ -864,6 +874,15 @@
       <width>311</width>
       <height>41</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Noto Sans Mono</family>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
     </property>
    </widget>
    <widget class="QLabel" name="label">
@@ -1813,6 +1832,22 @@
     </property>
     <property name="text">
      <string>Clear</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="HexUpperOption">
+    <property name="geometry">
+     <rect>
+      <x>430</x>
+      <y>90</y>
+      <width>101</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>UPPERCASE</string>
+    </property>
+    <property name="tristate">
+     <bool>false</bool>
     </property>
    </widget>
   </widget>
