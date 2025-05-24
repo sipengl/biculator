@@ -10,11 +10,13 @@ BiculatorMainWindow::BiculatorMainWindow(QWidget *parent)
     setWindowTitle("Bindows Calc.exe");
 
     // setup the binary toggle buttons
-    for (int i = 0; i < 64; ++i) {
+    for(int i = 0; i < 64; ++i)
+    {
         // Build the button name: "BinDigit0", "BinDigit1", ...
         QString btnName = QString("BinDigit%1").arg(i);
         QPushButton *btn = findChild<QPushButton*>(btnName);
-        if (btn) {
+        if(btn)
+        {
             btn->setCheckable(true);
             connect(btn, &QPushButton::toggled, this, &BiculatorMainWindow::onBinButtonToggled);
         }
@@ -29,6 +31,18 @@ BiculatorMainWindow::BiculatorMainWindow(QWidget *parent)
 
     // setup hex dispaly uppercase option check box
     connect(ui->HexUpperOption, &QCheckBox::clicked, this, &BiculatorMainWindow::onTextDisplayOptionChanged);
+
+    // setup/init the nib text display
+    for(int i = 0; i < 16; ++i)
+    {
+        // Build the button name: "BinDigit0", "BinDigit1", ...
+        QString labelName = QString("nib%1").arg(i);
+        QLabel *label = findChild<QLabel*>(labelName);
+        if(label)
+        {
+            label->setText("0");
+        }
+    }
 }
 
 BiculatorMainWindow::~BiculatorMainWindow()
@@ -48,6 +62,24 @@ void BiculatorMainWindow::onBinButtonToggled(bool checked)
 
         // update text display fields
         this->updateButtonToText();
+
+        // update the nibs
+        for(int i = 0; i < 16; ++i)
+        {
+            uint8_t nibSum = 0;
+            // Build the button name: "BinDigit0", "BinDigit1", ...
+            QString labelName = QString("nib%1").arg(i);
+            QLabel *label = findChild<QLabel*>(labelName);
+            if(label)
+            {
+                for(int j = 0; j < 4; j++)
+                {
+                    QPushButton *tmpBtn = findChild<QPushButton*>(QString("BinDigit%1").arg(4*i+j));
+                    nibSum += (tmpBtn->text().toUInt() << j);
+                }
+                label->setText(QString::number(nibSum, 16).toUpper());
+            }
+        }
 
         // For debugging or logic:
         qDebug() << "Button toggled:" << buttonName << "Checked:" << checked;
