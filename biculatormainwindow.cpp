@@ -9,6 +9,7 @@ BiculatorMainWindow::BiculatorMainWindow(QWidget *parent)
 
     setWindowTitle("Bindows Calc.exe");
 
+
     // setup the binary toggle buttons
     for(int i = 0; i < 64; ++i)
     {
@@ -43,6 +44,8 @@ BiculatorMainWindow::BiculatorMainWindow(QWidget *parent)
             label->setText("0");
         }
     }
+
+
 }
 
 BiculatorMainWindow::~BiculatorMainWindow()
@@ -83,7 +86,9 @@ void BiculatorMainWindow::onBinButtonToggled(bool checked)
 
         // For debugging or logic:
         qDebug() << "Button toggled:" << buttonName << "Checked:" << checked;
+
     }
+
 }
 
 
@@ -97,6 +102,7 @@ void BiculatorMainWindow::onClearButtonClicked()
         tmpBtn->setText("0");
         tmpBtn->setChecked(false);
     }
+
     // update text display fields
     this->updateButtonToText();
 }
