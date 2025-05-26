@@ -21,11 +21,13 @@ private slots:
     void onBinButtonToggled(bool checked);
     void onClearButtonClicked();
     void onTextDisplayOptionChanged();
+    void onOpButtonClicked();
 
 private:
     Ui::BiculatorMainWindow *ui;
     uint64_t oprand1;
     uint64_t oprand2;
+    uint8_t opLock;
 
     void updateTextToButton();
     void updateButtonToText();

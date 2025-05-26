@@ -9,6 +9,7 @@ BiculatorMainWindow::BiculatorMainWindow(QWidget *parent)
 
     setWindowTitle("Bindows Calc.exe");
 
+    this->opLock = 0;
 
     // setup the binary toggle buttons
     for(int i = 0; i < 64; ++i)
@@ -29,6 +30,10 @@ BiculatorMainWindow::BiculatorMainWindow(QWidget *parent)
 
     // setup the clear button
     connect(ui->ClearButton, &QPushButton::clicked, this, &BiculatorMainWindow::onClearButtonClicked);
+    // setup << and >> button
+    connect(ui->LeftShiftButton, &QPushButton::clicked, this, &BiculatorMainWindow::onOpButtonClicked);
+    connect(ui->RightShiftButton, &QPushButton::clicked, this, &BiculatorMainWindow::onOpButtonClicked);
+
 
     // setup hex dispaly uppercase option check box
     connect(ui->HexUpperOption, &QCheckBox::clicked, this, &BiculatorMainWindow::onTextDisplayOptionChanged);
@@ -57,14 +62,15 @@ void BiculatorMainWindow::onBinButtonToggled(bool checked)
 {
     // sender() returns a QObject*, so cast it to QPushButton*
     QPushButton *btn = qobject_cast<QPushButton*>(sender());
-    if (btn) {
-        // Now you can access properties of the button
-        QString buttonName = btn->objectName(); // e.g., "pushButton17"
-        QString buttonText = btn->text();
-        btn->setText(checked ? "1" : "0"); // update button value
-
-        // update text display fields
-        this->updateButtonToText();
+    if (btn)
+    {
+        if(!this->opLock)
+        {
+             // update button value
+            btn->setText(checked ? "1" : "0");
+            // update text display fields
+            this->updateButtonToText();
+        }
 
         // update the nibs
         for(int i = 0; i < 16; ++i)
@@ -84,9 +90,6 @@ void BiculatorMainWindow::onBinButtonToggled(bool checked)
             }
         }
 
-        // For debugging or logic:
-        qDebug() << "Button toggled:" << buttonName << "Checked:" << checked;
-
     }
 
 }
@@ -105,18 +108,39 @@ void BiculatorMainWindow::onClearButtonClicked()
 
     // update text display fields
     this->updateButtonToText();
+
+    // update oprand1
+    this->oprand1 = 0;
 }
 
-
+// this will update this->oprand1 by onBinButtonToggled callback!
+// if this update is called from left/right shift, make sure to lock
+// so that oprand1 doesn't get overwritten during the onBinButtonToggled callback.
 void BiculatorMainWindow::updateTextToButton()
 {
-
+    for(int i = 0; i < 64; i++)
+    {
+        QString tmpBtnName = QString("BinDigit%1").arg(i);
+        QPushButton *tmpBtn = findChild<QPushButton*>(tmpBtnName);
+        if(this->oprand1 & (1ULL << i))
+        {
+            tmpBtn->setText("1");
+            tmpBtn->setChecked(true);
+        }
+        else
+        {
+            tmpBtn->setText("0");
+            tmpBtn->setChecked(false);
+        }
+    }
 }
 
 
+// keep oprand1 consistant with text displays
 void BiculatorMainWindow::updateButtonToText()
 {
     uint64_t input = 0;
+
     for(int i = 0; i < 64; i++)
     {
         QString tmpBtnName = QString("BinDigit%1").arg(i);
@@ -129,6 +153,9 @@ void BiculatorMainWindow::updateButtonToText()
     else
         ui->Display_Hex->setText("0x" + QString::number(input, 16));
     ui->Display_Dec->setText(QString::number(input, 10));
+
+    // update oprand1
+    this->oprand1 = input;
 }
 
 
@@ -137,6 +164,33 @@ void BiculatorMainWindow::onTextDisplayOptionChanged()
     this->updateButtonToText();
 }
 
+
+void BiculatorMainWindow::onOpButtonClicked()
+{
+    // find out what button is clicked
+    this->opLock = 1;
+
+    QPushButton *button = qobject_cast<QPushButton*>(sender());
+    if(button == ui->LeftShiftButton )
+    {
+        this->oprand1 <<= 1;
+        this->updateTextToButton();
+    }
+    else if(button == ui->RightShiftButton)
+    {
+        this->oprand1 >>= 1;
+        this->updateTextToButton();
+    }
+    else
+    {
+        qDebug() << "unidentified OpButton pressed";
+    }
+
+    this->updateButtonToText();
+
+    this->opLock = 0;
+
+}
 
 
 
