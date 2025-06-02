@@ -22,6 +22,7 @@ private slots:
     void onClearButtonClicked();
     void onTextDisplayOptionChanged();
     void onOpButtonClicked();
+    void onLineEditTextChanged(const QString &newText);
 
 private:
     Ui::BiculatorMainWindow *ui;

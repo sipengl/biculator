@@ -27,6 +27,8 @@ BiculatorMainWindow::BiculatorMainWindow(QWidget *parent)
     // setup/init the HEX/DEC display text fields
     ui->Display_Hex->setText("0x0");
     ui->Display_Dec->setText("0");
+    connect(ui->Display_Hex, &QLineEdit::textChanged, this, &BiculatorMainWindow::onLineEditTextChanged);
+    connect(ui->Display_Dec, &QLineEdit::textChanged, this, &BiculatorMainWindow::onLineEditTextChanged);
 
     // setup the clear button
     connect(ui->ClearButton, &QPushButton::clicked, this, &BiculatorMainWindow::onClearButtonClicked);
@@ -191,6 +193,36 @@ void BiculatorMainWindow::onOpButtonClicked()
     this->opLock = 0;
 
 }
+
+void BiculatorMainWindow::onLineEditTextChanged(const QString &newText)
+{
+    QLineEdit *qle = qobject_cast<QLineEdit*>(sender());
+    if(qle == ui->Display_Dec)
+    {
+        qDebug() << "DEC is now " << newText;
+    }
+    else if(qle == ui->Display_Hex)
+    {
+        qDebug() << "HEX is now " << newText;
+    }
+    else
+    {
+        qDebug() << "unidentified qlineedit";
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
